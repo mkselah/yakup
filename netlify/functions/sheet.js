@@ -3,6 +3,7 @@ export async function handler(event, context) {
   const SHEET_ID = '10nEc8I8XssKCdwbP2A3MOI5TwZQ49Qzg1yGkFDKQkt8';
   const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
 
+   
   try {
     const resp = await fetch(CSV_URL);
     if (!resp.ok) throw new Error(`Fetch error: ${resp.status}`);
