@@ -1,6 +1,5 @@
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5";
-const ANTHROPIC_VERSION = "2023-06-01";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTI_BOILERPLATE = `
 Do not repeat or rephrase the user's prompt in your answers.
@@ -26,7 +25,7 @@ function splitSystemAndMessages(allMessages) {
     }));
   return { system: systemParts.join("\n\n"), chatMessages };
 }
-async function callClaude(system, messages, maxTokens = 4096, temperature = 0.7) {
+async function callClaude(system, messages, maxTokens = 4096) {
   if (!ANTHROPIC_API_KEY) throw new Error("Missing ANTHROPIC_API_KEY");
   const resp = await fetch(ANTHROPIC_URL, {
     method: "POST",
@@ -39,7 +38,6 @@ async function callClaude(system, messages, maxTokens = 4096, temperature = 0.7)
       model: CLAUDE_MODEL,
       system: system || undefined,
       max_tokens: maxTokens,
-      temperature,
       messages,
     }),
   });
@@ -56,7 +54,7 @@ async function getSuggestions(messages) {
     "Given the conversation so far, suggest 3 concise, engaging, natural next user questions to keep the dialog going. Reply with ONLY a JSON array of exactly 3 short strings, nothing else.";
   let suggestions = [];
   try {
-    const data = await callClaude(suggestionSystem, chatMessages, 200, 0.65);
+    const data = await callClaude(suggestionSystem, chatMessages, 200);
     const text = (data.content || []).map((c) => c.text).join("\n");
     const m = text.match(/\[.*\]/s);
     if (m) suggestions = JSON.parse(m[0]);
@@ -78,7 +76,7 @@ export async function handler(event) {
     const { system, chatMessages } = splitSystemAndMessages(contextMsgs);
     // 1. Get assistant reply
     const llmStart = Date.now();
-    const data = await callClaude(system, chatMessages, 4096, 0.7);
+    const data = await callClaude(system, chatMessages, 4096);
     const llmDuration = Date.now() - llmStart;
     const reply = (data.content || []).map((c) => c.text).join("\n");
     const usage = {
