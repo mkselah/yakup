@@ -5,7 +5,6 @@ html, body {
   font-family: sans-serif;
   background: #f5f6fa;
 }
-
 body {
   min-height: 100vh;
   min-width: 0;
@@ -13,27 +12,22 @@ body {
   display: flex;
   flex-direction: column;
 }
-
 #authSection {
   padding: 0.6em 1em;
 }
-
 #authForm input, #authForm button {
   margin-right: 0.3em;
 }
-
 #authStatus {
   margin-left: 0.7em;
   font-size: 0.9em;
 }
-
 #app {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
-
 /* ===== Topbar Styles ===== */
 #topbar {
   display: flex;
@@ -56,7 +50,6 @@ body {
   margin: 0;
   font-size: 1em;
 }
-
 /* Chat Main Area */
 .main-wrapper {
   width: 100vw;
@@ -66,7 +59,6 @@ body {
   min-width: 0;
   min-height: 0;
 }
-
 /* Chat area */
 .chat-section {
   flex: 1;
@@ -76,7 +68,6 @@ body {
   min-width: 0;
   min-height: 0;
 }
-
 #chatWindow {
   flex: 1;
   min-height: 0;
@@ -87,7 +78,6 @@ body {
   gap: 12px;
   background: #f5f6fa;
 }
-
 /* Chat bubbles - DESKTOP DEFAULTS */
 .user {
   align-self: flex-end;
@@ -96,6 +86,7 @@ body {
   border-radius: 10px 12px 3px 12px;
   max-width: 82%;
   word-break: break-word;
+  white-space: pre-wrap;
   box-sizing: border-box;
 }
 .assistant {
@@ -110,8 +101,8 @@ body {
 .system {
   color: #888;
   text-align: center;
+  white-space: pre-wrap;
 }
-
 /* Chat input form */
 #chatForm {
   display: flex;
@@ -120,7 +111,6 @@ body {
   padding: 0.6em;
   background: #f8f9fa;
 }
-
 #userInput {
   flex: 1;
   font-size: 1.08em;
@@ -137,7 +127,6 @@ body {
   outline-color: #749cff;
   background: #f2f6ff;
 }
-
 #chatForm button {
   font-size: 1.12em;
   border-radius: 6px;
@@ -152,7 +141,6 @@ body {
   background: #6799db;
   color: white;
 }
-
 #showSheetBtn {
   background: none;
   border: none;
@@ -167,13 +155,11 @@ body {
   background: #e0e4fc;
   opacity: 1;
 }
-
 @media (max-width: 600px) {
   #app, .main-wrapper { flex-direction: column; }
   #topbar { flex-wrap: wrap; font-size: 97%; padding: 0.8em 0.4em; }
   .chat-section { min-width: 0; min-height: 0; }
   #chatWindow { padding: 0.7em 0.2em; }
-
   /* Make chat bubbles nearly full width, with only a little margin for readability and 'edge tap' comfort */
   .user, .assistant {
     max-width: 96vw;
@@ -184,7 +170,6 @@ body {
   }
   #userInput { font-size: 1em; }
 }
-
 /* Message row flexbox (add after .system for clarity) */
 .message-container {
   display: flex;
@@ -192,7 +177,6 @@ body {
   gap: 0.3em;
   position: relative;
 }
-
 /* Make delete button less visually heavy */
 .msg-delete-btn {
   color: #b91c1c;
@@ -207,7 +191,6 @@ body {
   opacity: 1;
   color: #ff0000;
 }
-
 .suggestions {
   display: flex;
   gap: 8px;
@@ -226,13 +209,11 @@ body {
 .sugg-btn:active {
   background: #bed8ff;
 }
-
 .action-row {
   display: flex;
   gap: 12px;
   margin: 4px 0 2px 34px;
 }
-
 /* Slight touch-ups for listen & trash so they are easy but minimal */
 .listen-btn, .msg-delete-btn {
   background: none;
@@ -251,7 +232,6 @@ body {
 .listen-btn:active {
   background: #bed8ff;
 }
-
 .download-btn {
   background: none;
   border: none;
@@ -269,7 +249,6 @@ body {
 .download-btn:active {
   background: #bed8ff;
 }
-
 @media (max-width: 600px) {
   #chatForm {
     flex-wrap: wrap;
