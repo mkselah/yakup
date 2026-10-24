@@ -3,48 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yakup Champion Mindset</title>
+  <title>DK Price Checker</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
 </head>
 <body>
-  <!-- Top Auth Bar: only login/signup on this line -->
-  <div id="authSection">
-    <div id="authForm">
-      <input id="authEmail" type="email" placeholder="Email" />
-      <input id="authPassword" type="password" placeholder="Password" />
-      <button id="loginBtn">Log In</button>
-      <button id="signupBtn">Sign Up</button>
-      <span id="authStatus"></span>
+  <header>
+    <h1>🇩🇰 Price Checker</h1>
+  </header>
+  <section class="controls">
+    <div class="row">
+      <input id="sheetUrl" type="text" placeholder="Paste Google Sheet URL or ID" />
+      <button id="loadBtn">Load</button>
     </div>
-    <!-- REMOVE: <button id="logoutBtn" style="display:none;">Log Out</button> -->
-  </div>
-
-  <!-- App Layout -->
-  <div id="app" class="main-wrapper">
-
-    <!-- Top Bar: sticky, shows topics & all actions, including logout -->
-    <div id="topbar">
-      <select id="topicDropdown"></select>
-      <button id="addTopicBtn" title="New topic">+</button>
-      <button id="renameTopicBtn" title="Rename topic">📝</button>
-      <button id="deleteTopicBtn" title="Delete topic">🗑️</button>
-      <span id="currentTopicLabel"></span>
-      <span style="flex:1"></span>
-      <button id="logoutBtn" style="display:none; margin-left:auto;">Log Out</button>
+    <div class="row">
+      <span id="sheetTitle"></span>
+      <select id="tabSelect"></select>
+      <label><input id="skipPriced" type="checkbox" checked /> Skip items already checked today</label>
     </div>
-
-    <main class="chat-section">
-      <div id="chatWindow"></div>
-      <form id="chatForm">
-        <textarea id="userInput" autocomplete="off" placeholder="Type your message..." rows="1"></textarea>
-        <!-- Removed <button type="button" id="micBtn" title="Use voice input">🎤</button> -->
-        <button id="showSheetBtn" type="button" title="Show Google Sheet Data">📄</button>
-        <button type="submit">Send</button>
-        <div id="sheetData" style="display:none; max-height:300px; overflow:auto; background:#f8faff; border:1px solid #bed8ff; margin:8px 0; padding:7px; border-radius:7px;"></div>
-      </form>
-    </main>
-  </div>
-  <script type="module" src="script.js"></script>
+    <div class="row">
+      <button id="runBtn" class="primary" disabled>▶ Find prices</button>
+      <button id="stopBtn" disabled>⏹ Stop</button>
+      <span id="status"></span>
+    </div>
+  </section>
+  <table id="itemsTable">
+    <thead>
+      <tr>
+        <th>Row</th>
+        <th>Item</th>
+        <th>Status</th>
+        <th>Price (DKK)</th>
+        <th>Shop</th>
+        <th>Matched product</th>
+        <th>Conf.</th>
+        <th>Checked</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script src="app.js"></script>
 </body>
 </html>
