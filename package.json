@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "check": "node src/index.js --once",
-    "testmail": "node src/mail.js --test"
+    "testmail": "node src/mail.js --test",
+    "inspect": "node tools/inspect.js"
   },
   "engines": {
     "node": ">=20.12"
