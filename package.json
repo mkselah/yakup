@@ -1,16 +1,18 @@
 {
-  "name": "dk-price-checker",
-  "version": "0.2.0",
+  "name": "price-watcher",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --env-file=.env server.js"
+    "start": "node src/index.js",
+    "check": "node src/index.js --once",
+    "testmail": "node src/mail.js --test"
   },
   "engines": {
-    "node": ">=20.6"
+    "node": ">=20.12"
   },
   "dependencies": {
-    "google-auth-library": "^9.15.0"
+    "cheerio": "^1.2.0",
+    "nodemailer": "^10.6.0"
   }
 }
