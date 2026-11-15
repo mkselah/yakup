@@ -6,6 +6,11 @@ Commands:
   npm run check      run all watchers once
   npm start          run forever (hourly loop)
   npm run testmail   send a test mail
+Tablet (Termux):
+  sh run.sh          start in background (also done by Termux:Boot)
+  sh stop.sh         stop
+  sh update.sh       git pull + npm install + restart
+  tail -f data/log.txt   watch the log
 Config:
   .env            secrets (never commit)  -> copy from .env.example
   watchers.json   list of pages to watch
