@@ -5,6 +5,7 @@ import { sendMail } from "./mail.js";
 import { loadState, saveState, pruneSeen } from "./state.js";
 import { fetchPostings } from "./watchers/postings.js";
 import { fetchPrice } from "./watchers/price.js";
+import { fetchSearch } from "./watchers/search.js";
 import { appendPrice } from "./history.js";
 import { escapeHtml, formatKr } from "./util.js";
 const FAIL_ALERT_AFTER = 3; // consecutive failures before we mail an alert
@@ -12,6 +13,7 @@ const FAIL_ALERT_AFTER = 3; // consecutive failures before we mail an alert
 const handlers = {
   postings: fetchPostings,
   price: fetchPrice,
+  search: fetchSearch,
 };
 // ================= postings =================
 function buildDigest(w, items) {
@@ -96,7 +98,8 @@ function buildPriceMail(w, offers, target, previousAlert) {
     <p>Cheapest: <b>${escapeHtml(best.shop)}</b> &ndash; target was ${escapeHtml(formatKr(target))}.</p>
     ${prev}
     <table style="font-size:15px">${rows}</table>
-    <p><a href="${escapeHtml(w.url)}">${escapeHtml(w.url)}</a></p>`;
+    ${best.product ? `<p>Matched product: ${escapeHtml(best.product)} (${escapeHtml(best.confidence || "?")} confidence). Please verify on the shop page.</p>` : ""}
+    <p><a href="${escapeHtml(best.url || w.url || "")}">${escapeHtml(best.url || w.url || "")}</a></p>`;
 }
 // Alert rule:
 //   mail when price <= target AND (never alerted, or price < last alerted price)
@@ -183,6 +186,6 @@ export async function runWatcher(w, opts = {}) {
   ws.failures = 0;
   ws.alerted = false;
   delete ws.lastError;
-  if (w.type === "price") return await processPrice(w, ws, state, items, now);
+  if (w.type === "price" || w.type === "search") return await processPrice(w, ws, state, items, now);
   return await processPostings(w, ws, state, items, now);
 }

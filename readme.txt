@@ -17,6 +17,10 @@ Price watchers (type "price" in watchers.json):
   times    daily run times, Danish time (default 10:00 and 14:00)
   history  data/prices.csv  (date,name,price,shop)
   alert    mails once per price level; a lower price mails again; going above target re-arms
+Search watchers (type "search" in watchers.json): Claude web-searches the item
+  item     product description, as specific as possible (brand, model, size, colour)
+  target, times, excludeShops  same as the price type
+  needs ANTHROPIC_API_KEY in .env (costs a few cents per check)
 Config:
   .env            secrets (never commit)  -> copy from .env.example
   watchers.json   list of pages to watch

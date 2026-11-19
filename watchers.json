@@ -11,5 +11,12 @@
     "target": 270,
     "times": ["10:00", "14:00"],
     "excludeShops": ["AI Eyewear"]
+  },
+  {
+    "name": "iPhone 17 5G",
+    "type": "search",
+    "item": "iPhone 17 5G 256GB inkl moms",
+    "target": 6500,
+    "times": ["12:00"]
   }
 ]

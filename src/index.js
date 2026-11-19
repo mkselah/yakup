@@ -31,14 +31,15 @@ function loadWatchers() {
   if (!Array.isArray(list)) throw new Error("watchers.json must be a list [ ... ]");
   const names = new Set();
   for (const [i, w] of list.entries()) {
-    for (const key of ["name", "type", "url"]) {
+    const required = w?.type === "search" ? ["name", "type", "item"] : ["name", "type", "url"];
+    for (const key of required) {
       if (!w || typeof w[key] !== "string" || !w[key].trim()) {
         throw new Error(`watchers.json entry #${i + 1}: missing "${key}"`);
       }
     }
     if (names.has(w.name)) throw new Error(`watchers.json: duplicate name "${w.name}"`);
     names.add(w.name);
-    if (w.type === "price") {
+    if (w.type === "price" || w.type === "search") {
       if (!(Number(w.target) > 0)) {
         throw new Error(`watchers.json "${w.name}": "target" must be a number above 0`);
       }
@@ -111,7 +112,7 @@ async function runCycle(printList, force) {
     // small pause between different sites
     if (ranAny) await sleep(2000 + Math.random() * 3000);
     ranAny = true;
-    console.log(`\n=== ${w.name} (${w.url}) ===`);
+    console.log(`\n=== ${w.name} (${w.url ?? w.item}) ===`);
     try {
       const result = await runWatcher(w, { slot });
       if (result.ok) {
