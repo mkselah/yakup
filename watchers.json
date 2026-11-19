@@ -3,5 +3,13 @@
     "name": "Too Great To Cancel",
     "type": "postings",
     "url": "https://toogreattocancel.dk/"
+  },
+  {
+    "name": "Acuvue Moist 90",
+    "type": "price",
+    "url": "https://www.pricerunner.dk/pl/334-4686103/Kontaktlinser/Johnson-Johnson-1-Day-Acuvue-Moist-90-pack-Sammenlign-Priser",
+    "target": 270,
+    "times": ["10:00", "14:00"],
+    "excludeShops": ["AI Eyewear"]
   }
 ]

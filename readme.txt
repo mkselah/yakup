@@ -11,6 +11,12 @@ Tablet (Termux):
   sh stop.sh         stop
   sh update.sh       git pull + npm install + restart
   tail -f data/log.txt   watch the log
+Price watchers (type "price" in watchers.json):
+  target   mail when the cheapest price is at or below this (kr)
+  excludeShops   list of shop names to ignore, e.g. ["AI Eyewear"]
+  times    daily run times, Danish time (default 10:00 and 14:00)
+  history  data/prices.csv  (date,name,price,shop)
+  alert    mails once per price level; a lower price mails again; going above target re-arms
 Config:
   .env            secrets (never commit)  -> copy from .env.example
   watchers.json   list of pages to watch

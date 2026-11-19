@@ -4,7 +4,7 @@ import * as cheerio from "cheerio";
 import { parseDkPrice } from "../util.js";
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
-async function fetchHtml(url) {
+export async function fetchHtml(url) {
   const res = await fetch(url, {
     headers: {
       "User-Agent": USER_AGENT,
