@@ -1,6 +1,7 @@
 // Entry point.
 //   npm run check  -> run all watchers once (ignores schedules) and print the results
-//   npm start      -> forever: interval watchers every CHECK_INTERVAL_MIN minutes,
+//   npm start      -> forever: interval watchers every CHECK_INTERVAL_MIN minutes
+//                     (optionally with quiet hours / fast windows, see "schedule" in watchers.json),
 //                     price watchers at their fixed "times" (default 10:00 and 14:00)
 // Load .env if it exists (Node 20.12+). No dependency needed.
 try {
@@ -9,14 +10,14 @@ try {
 import { readFileSync } from "node:fs";
 import { runWatcher } from "./check.js";
 import { loadState } from "./state.js";
-import { dueSlot } from "./schedule.js";
+import { dueSlot, intervalFor, validateSchedule } from "./schedule.js";
 import { log } from "./log.js";
 const once = process.argv.includes("--once");
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const TICK_MS = 60_000; // how often the loop checks "is anything due?"
 const DEFAULT_TIMES = ["10:00", "14:00"];
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
-const nextRunAt = new Map(); // watcher name -> timestamp (interval watchers only)
+const lastRun = new Map(); // watcher name -> { at: timestamp, r: random 0..1 }  (interval watchers only)
 let lastConfigError = null;
 // ---------- config ----------
 // Read from disk every tick, so edits to watchers.json apply without a restart.
@@ -48,6 +49,7 @@ function loadWatchers() {
         throw new Error(`watchers.json "${w.name}": "times" must look like ["10:00","14:00"]`);
       }
     }
+    if (w.schedule != null) validateSchedule(w.name, w.schedule);
   }
   return list.filter((w) => w.enabled !== false); // "enabled": false skips an entry
 }
@@ -55,11 +57,11 @@ function intervalMinutes() {
   const n = Number(process.env.CHECK_INTERVAL_MIN);
   return Number.isFinite(n) && n >= 1 ? n : 60;
 }
-// Interval + random jitter (0..10% of the interval, max 5 min), so we don't hit the site on the exact minute.
-function nextDelayMs() {
-  const base = intervalMinutes() * 60_000;
-  const jitter = Math.random() * Math.min(base * 0.1, 5 * 60_000);
-  return Math.round(base + jitter);
+// Wait time in ms for a given interval, plus a small random jitter (0..10% of the interval,
+// max 5 min), so we don't hit the site on the exact minute. r is fixed per run (0..1).
+function delayMs(minutes, r) {
+  const base = minutes * 60_000;
+  return Math.round(base + r * Math.min(base * 0.1, 5 * 60_000));
 }
 // ---------- output for `npm run check` ----------
 function printPostings(items) {
@@ -105,8 +107,11 @@ async function runCycle(printList, force) {
         state ??= loadState();
         slot = dueSlot(w, state.watchers[w.name]);
         if (!slot) continue;
-      } else if (Date.now() < (nextRunAt.get(w.name) ?? 0)) {
-        continue;
+      } else {
+        const mins = intervalFor(w, intervalMinutes());
+        if (mins === null) continue; // quiet hours
+        const last = lastRun.get(w.name);
+        if (last && Date.now() < last.at + delayMs(mins, last.r)) continue;
       }
     }
     // small pause between different sites
@@ -127,12 +132,12 @@ async function runCycle(printList, force) {
     } catch (err) {
       log(w.name, `ERROR ${err.message}`);
     }
-    if (!w.times) nextRunAt.set(w.name, Date.now() + nextDelayMs());
+    if (!w.times) lastRun.set(w.name, { at: Date.now(), r: Math.random() });
   }
 }
 // ---------- forever loop ----------
 async function loop() {
-  log("-", `started: interval watchers every ${intervalMinutes()} min (+ jitter), price watchers at their set times`);
+  log("-", `started: interval watchers every ${intervalMinutes()} min (+ jitter, or per their schedule), price watchers at their set times`);
   while (true) {
     try {
       await runCycle(false, false);

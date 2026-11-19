@@ -2,7 +2,13 @@
   {
     "name": "Too Great To Cancel",
     "type": "postings",
-    "url": "https://toogreattocancel.dk/"
+    "url": "https://toogreattocancel.dk/",
+    "titleIncludes": ["(København)"],
+    "schedule": {
+      "quiet": ["00:00", "07:00"],
+      "fast": [["08:30", "10:00"], ["14:30", "15:30"]],
+      "fastEveryMin": 10
+    }
   },
   {
     "name": "Acuvue Moist 90",

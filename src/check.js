@@ -147,6 +147,16 @@ async function processPrice(w, ws, state, offers, now) {
   };
 }
 // ================= shared =================
+// Optional watchers.json filter for "postings" watchers:
+//   "titleIncludes": ["(København)"]  -> keep only postings whose title contains ALL of these
+// (case-insensitive)
+function filterPostings(items, w) {
+  const need = [].concat(w.titleIncludes ?? [])
+    .map((s) => String(s).trim().toLowerCase())
+    .filter(Boolean);
+  if (need.length === 0) return items;
+  return items.filter((it) => need.every((n) => it.title.toLowerCase().includes(n)));
+}
 // Returns { ok, type, items, newCount, summary, error }
 export async function runWatcher(w, opts = {}) {
   const handler = handlers[w.type];
@@ -186,6 +196,7 @@ export async function runWatcher(w, opts = {}) {
   ws.failures = 0;
   ws.alerted = false;
   delete ws.lastError;
+  if (w.type === "postings") items = filterPostings(items, w);
   if (w.type === "price" || w.type === "search") return await processPrice(w, ws, state, items, now);
   return await processPostings(w, ws, state, items, now);
 }

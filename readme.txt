@@ -11,6 +11,11 @@ Tablet (Termux):
   sh stop.sh         stop
   sh update.sh       git pull + npm install + restart
   tail -f data/log.txt   watch the log
+Postings watchers: optional "schedule" in watchers.json
+  quiet         ["00:00","07:00"]  no checks in this period (Danish time)
+  fast          [["08:30","10:00"],["14:30","15:30"]]  faster checks in these periods
+  fastEveryMin  10  minutes between checks in the fast periods
+  otherwise every CHECK_INTERVAL_MIN minutes (default 60)
 Price watchers (type "price" in watchers.json):
   target   mail when the cheapest price is at or below this (kr)
   excludeShops   list of shop names to ignore, e.g. ["AI Eyewear"]
